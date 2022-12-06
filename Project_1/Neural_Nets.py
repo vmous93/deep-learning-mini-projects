@@ -50,15 +50,12 @@ class LeNet5(nn.Module):
         self.convolutional_layer = nn.Sequential(            
             nn.Conv2d(2, 16, 3),
             ReLU(True),
-            nn.BatchNorm2d(16),
             nn.MaxPool2d(2, 2),
             nn.Conv2d(16, 32, 3),
             ReLU(True),
-            nn.BatchNorm2d(32),
             nn.MaxPool2d(2, 2),
             nn.Conv2d(32, 120, 2),
-            ReLU(True),
-            nn.BatchNorm2d(120)
+            ReLU(True)
         )
         
         self.linear_layer = nn.Sequential(
