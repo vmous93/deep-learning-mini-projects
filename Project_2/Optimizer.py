@@ -55,21 +55,25 @@ class AdamOptim():
                         module.m_dw, module.v_dw = torch.zeros((module.weight).shape), torch.zeros((module.weight).shape)
                         module.m_db, module.v_db = torch.zeros((module.bias).shape), torch.zeros((module.bias).shape)
                     
-                    ## momentum beta 1
+                    # beta 1
+                    # Moving average of gradient
                     #weights
                     module.m_dw = self.beta1*module.m_dw + (1-self.beta1)*gw
                     #biases
                     module.m_db = self.beta1*module.m_db + (1-self.beta1)*gb
 
                     # beta 2
+                    # Moving average of squared gradient
                     # weights 
                     module.v_dw = self.beta2*module.v_dw + (1-self.beta2)*(gw**2)
                     # biases
                     module.v_db = self.beta2*module.v_db + (1-self.beta2)*(gb**2)
 
                     # bias correction
+                    # Compute bias corr first moment
                     m_dw_corr = module.m_dw/(1-self.beta1**self.t)
                     m_db_corr = module.m_db/(1-self.beta1**self.t)
+                    # Compute bias corr second moment
                     v_dw_corr = module.v_dw/(1-self.beta2**self.t)
                     v_db_corr = module.v_db/(1-self.beta2**self.t)
 
