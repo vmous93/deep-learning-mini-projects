@@ -23,7 +23,7 @@ train_input, train_target, train_classes, test_input, test_target, test_classes 
 # WS + AL MLPNet
 
 
-
+# A MLP Network for classification
 class Pre_WSAL_MLP(nn.Module):
     def __init__(self):
         super(Pre_WSAL_MLP, self).__init__()
@@ -45,7 +45,7 @@ class Pre_WSAL_MLP(nn.Module):
 
 
 
-
+# A MLP Network for comparing the result of classification
 class WS_AL_MLPNet(nn.Module):
     def __init__(self):
         super(WS_AL_MLPNet, self).__init__()
@@ -64,18 +64,18 @@ class WS_AL_MLPNet(nn.Module):
           Sigmoid())
         
     def forward(self, x):
+        # Return the results of each classification for computing the auxiliary losses
         x1 = self.weightSharing(x[:, 0])
         x2 = self.weightSharing(x[:, 1])
         X = torch.cat((x1, x2), 1)
         res = self.fullyConnected(X)
-        
         return x1,x2, res
 
 # WS + AL LeNet5
 
 
 
-
+# LeNet for classification
 class Pre_WSAL_LeNet5(nn.Module):
 
     def __init__(self):
@@ -107,7 +107,7 @@ class Pre_WSAL_LeNet5(nn.Module):
         return x
 
 
-
+ # LeNet for comparing the result of classification
 class WSAL_LeNet5(nn.Module):
     def __init__(self):
         super(WSAL_LeNet5, self).__init__()
@@ -123,6 +123,7 @@ class WSAL_LeNet5(nn.Module):
           Sigmoid())
         
     def forward(self, x):
+        # Return the results of each classification for computing the auxiliary losses
         x1 = self.weightSharing(x[:, 0].unsqueeze(1))
         x2 = self.weightSharing(x[:, 1].unsqueeze(1))
         X = torch.cat((x1, x2), 1)
@@ -148,6 +149,7 @@ def train_model_WSAL(model, train_input, train_target, train_classes, lr, mini_b
             loss_x1 = cri1(x1, train_classes[:,0].narrow(0, b, mini_batch_size))
             loss_x2 = cri1(x2, train_classes[:,1].narrow(0, b, mini_batch_size))
             loss_res = cri3(res.view(-1, mini_batch_size), train_target.narrow(0, b, mini_batch_size).float())
+            # Computing the auxiliary loss
             loss = 0.05*(loss_x1 + loss_x2) + 0.3*loss_res
             acc_loss = acc_loss + loss.item()
             
@@ -155,7 +157,7 @@ def train_model_WSAL(model, train_input, train_target, train_classes, lr, mini_b
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-                    
+            #Converting the predicted labels to zero and one        
             res = torch.as_tensor((res - 0.5) > 0, dtype=torch.int32)
             for k in range(mini_batch_size):
                 if res[k] != train_target.narrow(0, b, mini_batch_size)[k]:
