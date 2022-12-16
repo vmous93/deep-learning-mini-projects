@@ -19,7 +19,7 @@ train_input, train_target, train_classes, test_input, test_target, test_classes 
 
 
 # MLPNet
-
+# A fully conected Network with two hidden layers
 class MLPNet(nn.Module):
     def __init__(self):
         super().__init__()
@@ -41,7 +41,7 @@ class MLPNet(nn.Module):
 
 
 # LeNet5
-
+# A Convolutional Network 
 class LeNet5(nn.Module):
 
     def __init__(self):
@@ -95,7 +95,7 @@ def train_model_simple(model, train_input, train_target, lr, mini_batch_size, nb
             loss.backward()
             optimizer.step()
 
-                    
+            #Converting the predicted labels to zero and one      
             output = torch.as_tensor((output - 0.5) > 0, dtype=torch.int32)
             for k in range(mini_batch_size):
                 if output[k] != train_target.narrow(0, b, mini_batch_size)[k]:
