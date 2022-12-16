@@ -18,7 +18,7 @@ train_input, train_target, train_classes, test_input, test_target, test_classes 
 
 
 # MLPNet with Auxiliary Losses 
-
+# MLPNet for classification image1
 class Pre_A_Loss1(nn.Module):
     def __init__(self):
         super(Pre_A_Loss1, self).__init__()
@@ -38,7 +38,7 @@ class Pre_A_Loss1(nn.Module):
         
         return x
 
-
+# MLPNet for classification image2
 class Pre_A_Loss2(nn.Module):
     def __init__(self):
         super(Pre_A_Loss2, self).__init__()
@@ -58,7 +58,7 @@ class Pre_A_Loss2(nn.Module):
         
         return x
 
-
+# MLPNet for comparing the result of classification of each image
 class ALoss_MLPNet(nn.Module):
     def __init__(self):
         super(ALoss_MLPNet, self).__init__()
@@ -88,7 +88,7 @@ class ALoss_MLPNet(nn.Module):
 
 
 # LeNet5 with Auxiliary Losses
-
+# A LeNet5 for classification image1
 class Pre_ALoss_LeNet5_1(nn.Module):
 
     def __init__(self):
@@ -120,7 +120,7 @@ class Pre_ALoss_LeNet5_1(nn.Module):
         return x
     
 
-
+# A LeNet5 for classification image2
 class Pre_ALoss_LeNet5_2(nn.Module):
 
     def __init__(self):
@@ -152,7 +152,7 @@ class Pre_ALoss_LeNet5_2(nn.Module):
         return x
     
 
-
+# A network for comparing the result of classification of each imag
 class ALoss_LeNet5(nn.Module):
     def __init__(self):
         super(ALoss_LeNet5, self).__init__()
@@ -196,6 +196,7 @@ def train_model_AxLoss(model, train_input, train_target, train_classes, lr, mini
             loss_x1 = cri1(x1, train_classes[:,0].narrow(0, b, mini_batch_size))
             loss_x2 = cri1(x2, train_classes[:,1].narrow(0, b, mini_batch_size))
             loss_res = cri3(res.view(-1, mini_batch_size), train_target.narrow(0, b, mini_batch_size).float())
+            # Computing the auxiliary loss
             loss = 0.05*(loss_x1 + loss_x2) + 0.3*loss_res
             acc_loss = acc_loss + loss.item()
             
@@ -203,7 +204,7 @@ def train_model_AxLoss(model, train_input, train_target, train_classes, lr, mini
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-                    
+            #Converting the predicted labels to zero and one        
             res = torch.as_tensor((res - 0.5) > 0, dtype=torch.int32)
             for k in range(mini_batch_size):
                 if res[k] != train_target.narrow(0, b, mini_batch_size)[k]:
