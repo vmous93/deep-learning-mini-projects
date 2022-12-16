@@ -20,7 +20,7 @@ train_input, train_target, train_classes, test_input, test_target, test_classes 
 
 # MLPNet with Weight sharing
 
-
+# A MLP network for classification
 class Pre_WS_MLPNet(nn.Module):
 
     def __init__(self):
@@ -45,7 +45,7 @@ class Pre_WS_MLPNet(nn.Module):
         
         return torch.cat((x1, x2), 1)
     
-
+# A MLP network for comparing the result of classification
 class WS_MLPNet(nn.Module):
     def __init__(self):
         super(WS_MLPNet, self).__init__()
@@ -130,7 +130,7 @@ def train_model_WS(model, train_input, train_target, lr,mini_batch_size, nb_epoc
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-                    
+            #Converte the predicted labels to zero and one           
             output = torch.as_tensor((output - 0.5) > 0, dtype=torch.int32)
             for k in range(mini_batch_size):
                 if output[k] != train_target.narrow(0, b, mini_batch_size)[k]:
