@@ -1,6 +1,5 @@
 # Deep-Learning-Mini-Projects
 
-## Group H
 Zahra Jaleh & SeyedVahid Mousavinezhad
 
 ## Projects:
